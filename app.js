@@ -26,6 +26,10 @@ function renderCafe(doc) {
 }
 //getting data
 db.collection("cafes")
+  .orderBy("name")
+  //to get one special data set
+  //   .where("city", "==", "kottawa")
+  //////////////////////////////
   .get()
   .then((snapshot) => {
     snapshot.docs.forEach((doc) => {
