@@ -25,17 +25,17 @@ function renderCafe(doc) {
   });
 }
 //getting data
-db.collection("cafes")
-  .orderBy("name")
-  //to get one special data set
-  //   .where("city", "==", "kottawa")
-  //////////////////////////////
-  .get()
-  .then((snapshot) => {
-    snapshot.docs.forEach((doc) => {
-      renderCafe(doc);
-    });
-  });
+// db.collection("cafes")
+//   .orderBy("name")
+//   //to get one special data set
+//   //   .where("city", "==", "kottawa")
+//   //////////////////////////////
+//   .get()
+//   .then((snapshot) => {
+//     snapshot.docs.forEach((doc) => {
+//       renderCafe(doc);
+//     });
+//   });
 
 //saving data
 
@@ -50,3 +50,20 @@ form.addEventListener("submit", (e) => {
   // Reload the page
   //   location.reload();
 });
+
+//real-time listner
+
+db.collection("cafes")
+  .orderBy("city")
+  .onSnapshot((snapshot) => {
+    let changes = snapshot.docChanges();
+    changes.forEach((change) => {
+      console.log(change);
+      if (change.type == "added") {
+        renderCafe(change.doc);
+      } else if (change.type == "removed") {
+        let li = cafeList.querySelector("[data-id=" + change.doc.id + "]");
+        cafeList.removeChild(li);
+      }
+    });
+  });
